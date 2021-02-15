@@ -7,10 +7,10 @@ const addNote = (title, body) => {
         return note.title === title
     });
 
-    if(duplicatedNotes.length === 0) {
+    if(duplicatedNotes.length) {
         notes.push({
-            title: title,
-            body: body
+            title,
+            body
         });
         saveNotes(notes);
         console.log('New note added!');
@@ -18,6 +18,19 @@ const addNote = (title, body) => {
         console.log('Note title taken!');
     }
 
+}
+const removeNote = title => {
+    const notes = loadNotes();
+    const notesToKeep = notes.filter(function (note) {
+        return note.title !== title
+    });
+
+    if(notesToKeep.length !== notes.length) {
+        saveNotes(notesToKeep);
+        console.log('Note ' + title + ' removed');
+    } else {
+        console.log('Note not found');
+    }
 }
 const saveNotes = notes => {
     const dataJSON = JSON.stringify(notes);
@@ -35,5 +48,6 @@ const loadNotes = () => {
 
 module.exports = {
     getNotes,
-    addNote
+    addNote,
+    removeNote
 };
