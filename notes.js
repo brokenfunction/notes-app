@@ -1,35 +1,49 @@
 const fs = require('fs');
+const chalk = require('chalk');
 
-const getNotes = () => { return 'Your notes ...' };
+const getNotes = () => {
+    const notes = loadNotes();
+    if (notes.length) {
+        console.log(chalk.blue.inverse('Notes list:'));
+        notes.forEach(note => console.log(note.title));
+    } else {
+        console.log(chalk.yellow.inverse('Notes are empty'))
+    }
+};
+const listNotes = () => {
+    const notes = loadNotes();
+    if (notes.length) {
+        console.log(chalk.blue.inverse('Notes list:'));
+        notes.forEach(note => console.log(note.title));
+    } else {
+        console.log(chalk.yellow.inverse('Notes are empty'))
+    }
+};
 const addNote = (title, body) => {
     const notes = loadNotes();
-    const duplicatedNotes = notes.filter(function (note) {
-        return note.title === title
-    });
+    const duplicatedNotes = notes.filter(note => note.title === title);
 
-    if(duplicatedNotes.length) {
+    if (!duplicatedNotes.length) {
         notes.push({
             title,
             body
         });
         saveNotes(notes);
-        console.log('New note added!');
+        console.log(chalk.green.inverse('New note added!'));
     } else {
-        console.log('Note title taken!');
+        console.log(chalk.yellow.inverse('Note title taken!'));
     }
 
 }
 const removeNote = title => {
     const notes = loadNotes();
-    const notesToKeep = notes.filter(function (note) {
-        return note.title !== title
-    });
+    const notesToKeep = notes.filter(note => note.title !== title);
 
-    if(notesToKeep.length !== notes.length) {
+    if (notesToKeep.length < notes.length) {
         saveNotes(notesToKeep);
-        console.log('Note ' + title + ' removed');
+        console.log(chalk.green.inverse('Note ' + title + ' removed'));
     } else {
-        console.log('Note not found');
+        console.log(chalk.red.inverse('No note found'));
     }
 }
 const saveNotes = notes => {
@@ -49,5 +63,6 @@ const loadNotes = () => {
 module.exports = {
     getNotes,
     addNote,
-    removeNote
+    removeNote,
+    listNotes
 };
